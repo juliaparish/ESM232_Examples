@@ -10,6 +10,7 @@ library(purrr)
 
 library(ggpubr)
 
+library(here)
 ```
 
 Run Solar Model with Data
@@ -58,8 +59,8 @@ tmp = map_df(site2,`[`, c("annual"))
 
 site2df = data.frame(year = tmp$annual$year, elect= tmp$annual$elect)
 
-# now we could plot
-ggplot(site2df, aes(year,elect, group=year ))+geom_boxplot()+labs(y="Electricity generated in W")
+# now we could plot, range of energy generated
+ggplot(site2df, aes(year, elect, group=year ))+geom_boxplot()+labs(y="Electricity generated in W")
 
 # we also might want an average across parameter uncertainty
 site2_average = site2df %>% group_by(year) %>% dplyr::summarize(elect=mean(elect))
@@ -76,6 +77,7 @@ tmp = map_df(site2,`[`, c("mean"))
 # how variable is electricity generation (mean over all time) with uncertainty in solar efficiency
 
 site2_mean = data.frame(eff=eff, elect= tmp)
+
 ggplot(site2_mean, aes(y=mean))+geom_boxplot()+
   labs(x="Electricity in W")
 

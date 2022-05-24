@@ -22,9 +22,6 @@ source("../R/dexppopK.R")
 
 dexppopK
 
-
-
-
 # want to learn about sensitivity to growth rate (r) and carrying capacity 
 # set the number of parameters
 np=100
@@ -44,7 +41,10 @@ head(sens_P$X)
 
 # lets add names 
 colnames(sens_P$X) = c("r","K")
+```
 
+
+```{r sen, error=TRUE}
 # I may re-use this function so I saved it as a file 
 # maxyear doesn't make sense for a growth that slows gradually - so I'll use year when population doubles
 source("../R/compute_pop_metrics.R")
@@ -64,7 +64,8 @@ p_wrapper = function(r,K, Pinitial, simtimes, func, metrics_func) {
   return(metrics)
 }
 
-allresults = as.data.frame(sens_P$X) %>% pmap(p_wrapper, Pinitial=Pinitial, simtimes=simtimes, func=dexppopK, metrics_func=compute_pop_metrics)
+allresults = as.data.frame(sens_P$X) %>% 
+  pmap(p_wrapper, Pinitial=Pinitial, simtimes=simtimes, func=dexppopK, metrics_func=compute_pop_metrics)
 
 # extract out results from pmap into a data frame
 allres = allresults %>% map_dfr(`[`,c("maxpop","dyear"))
@@ -84,7 +85,6 @@ sens_P_maxpop$S
 sens_P_maxpop$T
 
 
-
 # create another one for max year
 sens_P_dyear = sensitivity::tell(sens_P,allres$dyear)
 # first-order indices (main effect without co-variance)
@@ -100,3 +100,4 @@ sens_P_dyear$S
 # total sensitivity index -note that this partitions the output variance - so values sum to 1
 sens_P_dyear$T
 ```
+
